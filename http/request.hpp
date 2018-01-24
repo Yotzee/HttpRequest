@@ -47,15 +47,10 @@ SOFTWARE.
 namespace http
 {
 
-#define HTTP_REQUEST_GET 0
-#define HTTP_REQUEST_POST 1
-#define HTTP_REQUEST_DELETE 2
-#define HTTP_REQUEST_PUT 3
-
-#define HTTP_REQUEST_GET_NAME "GET"
-#define HTTP_REQUEST_POST_NAME "POST"
-#define HTTP_REQUEST_DELETE_NAME "DELETE"
-#define HTTP_REQUEST_PUT_NAME "PUT"
+#define HTTP_METHOD_GET "GET"
+#define HTTP_METHOD_POST "POST"
+#define HTTP_METHOD_DELETE "DELETE"
+#define HTTP_METHOD_PUT "PUT"
 
 #define HTTP_ERROR 0
 #define HTTP_SUCCESS 1
@@ -83,7 +78,6 @@ class request
 {
       private:
 	int _port;
-	int _method;
 	struct sockaddr_in address;
 	struct sockaddr_in serv_addr;
 	int sock;
@@ -94,12 +88,17 @@ class request
 	std::map<std::string, std::string> _headers;
 
       public:
+	void operator()()
+	{
+		commit();
+	}
+
 	request()
 	{
 		sock = 0;
 		valread = 0;
 		_port = 80;
-		setMethod(HTTP_REQUEST_GET);
+		setMethod(HTTP_METHOD_GET);
 		memset(buffer, '\0', sizeof(buffer));
 		memset(&serv_addr, 0, sizeof(sockaddr_in));
 		_headers[HTTP_HEADER_UA] = HTTP_USER_AGENT;
@@ -109,13 +108,17 @@ class request
 		_headers[HTTP_HEADER_CONNECTION] = "Close";
 	}
 
-	void setMethod(int method)
+	void setMethod(std::string method)
 	{
-		_method = method;
-		if (_method == HTTP_REQUEST_GET) _headers[HTTP_HEADER_METHOD] = HTTP_REQUEST_GET_NAME;
-		if (_method == HTTP_REQUEST_POST) _headers[HTTP_HEADER_METHOD] = HTTP_REQUEST_POST_NAME;
-		if (_method == HTTP_REQUEST_DELETE) _headers[HTTP_HEADER_METHOD] = HTTP_REQUEST_DELETE_NAME;
-		if (_method == HTTP_REQUEST_PUT) _headers[HTTP_HEADER_METHOD] = HTTP_REQUEST_PUT_NAME;
+		setMethod(method.c_str());
+	}
+
+	void setMethod(const char *method)
+	{
+		if (strcmp(method, HTTP_METHOD_GET) == 0) _headers[HTTP_HEADER_METHOD] = HTTP_METHOD_GET;
+		if (strcmp(method, HTTP_METHOD_POST) == 0) _headers[HTTP_HEADER_METHOD] = HTTP_METHOD_POST;
+		if (strcmp(method, HTTP_METHOD_DELETE) == 0) _headers[HTTP_HEADER_METHOD] = HTTP_METHOD_DELETE;
+		if (strcmp(method, HTTP_METHOD_PUT) == 0) _headers[HTTP_HEADER_METHOD] = HTTP_METHOD_PUT;
 	}
 
 	void setHeader(std::string headerName, std::string value)
@@ -206,20 +209,16 @@ class request
       public:
 	int commit()
 	{
-		if (_method == -1) return HTTP_ERROR;
-
 		serv_addr.sin_family = AF_INET;
 		serv_addr.sin_port = htons(_port);
 		struct hostent *host;
 
 		if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
-			// printf("socket creation failed");
 			return HTTP_ERROR;
 		}
 		setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (const char *)1, sizeof(int));
 
 		if ((host = gethostbyname(_headers[HTTP_HEADER_HOST].c_str())) == NULL) {
-			// herror("gethostbyname failed");
 			return HTTP_HOST_UNKNOWN;
 		}
 
@@ -227,7 +226,6 @@ class request
 
 		if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
 			close(sock);
-			// herror("connect failed");
 			return HTTP_HOST_UNKNOWN;
 		}
 

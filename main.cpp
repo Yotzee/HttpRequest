@@ -47,8 +47,8 @@ int main(int argc, char *argv[])
 	request.setPath(argv[2]);
 	request.setPort(atoi(argv[3]));
 	request.setHeader("Content-Type", "application/json");
-	request.setMethod(HTTP_REQUEST_GET);
-	request.commit();
+	request.setMethod(HTTP_METHOD_GET);
+	request();
 	std::cout << request.getBody() << std::endl;
 
 	return 0;
