@@ -97,6 +97,7 @@ class HttpRequest
 		sock = 0;
 		valread = 0;
 		_port = 80;
+		_method = HTTP_REQUEST_GET;
 		memset(buffer, '\0', sizeof(buffer));
 		memset(&serv_addr, 0, sizeof(sockaddr_in));
 		_headers[HTTP_HEADER_UA] = HTTP_USER_AGENT;
@@ -203,7 +204,7 @@ class HttpRequest
       public:
 	int commit()
 	{
-		if (_method == 0) return HTTP_ERROR;
+		if (_method == -1) return HTTP_ERROR;
 
 		serv_addr.sin_family = AF_INET;
 		serv_addr.sin_port = htons(_port);
