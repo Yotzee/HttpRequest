@@ -38,8 +38,11 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	http::server server;
+	server.setPort(3000);
+	server.listen();
 
-	Http::Request request;
+	http::request request;
 	request.setHost(argv[1]);
 	request.setPath(argv[2]);
 	request.setPort(atoi(argv[3]));

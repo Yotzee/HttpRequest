@@ -44,7 +44,7 @@ SOFTWARE.
 #include <unistd.h>
 #endif
 
-namespace Http
+namespace http
 {
 
 #define HTTP_REQUEST_GET 0
@@ -79,7 +79,7 @@ namespace Http
 
 #define HTTP_RESPONSE_STATUS "STATUS"
 #define HTTP_RESPONSE_BODY "BODY"
-class Request
+class request
 {
       private:
 	int _port;
@@ -94,7 +94,7 @@ class Request
 	std::map<std::string, std::string> _headers;
 
       public:
-	Request()
+	request()
 	{
 		sock = 0;
 		valread = 0;

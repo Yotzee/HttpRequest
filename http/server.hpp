@@ -25,11 +25,21 @@ SOFTWARE.
 
 namespace http
 {
-class Server
+class server
 {
-	Server()
+
+      private:
+	int _port;
+
+      public:
+	server()
 	{
-		
+		_port = -1;
+	}
+
+	void setPort(int port)
+	{
+		_port = port;
 	}
 
 	void listen()
