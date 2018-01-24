@@ -56,6 +56,7 @@ SOFTWARE.
 
 #define HTTP_ERROR 0
 #define HTTP_SUCCESS 1
+#define HTTP_HOST_UNKNOWN 2
 
 #define HTTP_HEADER_PATH "PATH_HEADER"
 #define HTTP_HEADER_HOST "Host"
@@ -155,7 +156,7 @@ class HttpRequest
 		setBody(body.c_str());
 	}
 
-	void setBody(char *body)
+	void setBody(const char *body)
 	{
 		_headers[HTTP_HEADER_BODY] = body;
 	}
@@ -207,22 +208,22 @@ class HttpRequest
 		struct hostent *host;
 
 		if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
-			printf("socket creation failed");
+			//printf("socket creation failed");
 			return HTTP_ERROR;
 		}
 		setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (const char *)1, sizeof(int));
 
 		if ((host = gethostbyname(_headers[HTTP_HEADER_HOST].c_str())) == NULL) {
-			herror("gethostbyname failed");
-			return 1;
+			//herror("gethostbyname failed");
+			return HTTP_HOST_UNKNOWN;
 		}
 
 		memcpy(&serv_addr.sin_addr, host->h_addr, host->h_length);
 
 		if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
 			close(sock);
-			herror("connect failed");
-			return HTTP_ERROR;
+			//herror("connect failed");
+			return HTTP_HOST_UNKNOWN;
 		}
 
 		std::string headers = buildHeader();
