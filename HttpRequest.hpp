@@ -23,17 +23,17 @@ SOFTWARE.
 #ifndef _HTTP_REQUEST_H_
 #define _HTTP_REQUEST_H_
 
-#include <cstdio>
-#include <cstdlib>
+#include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
 #include <map>
 #include <sstream>
-#include <string>
+#include <cstring>
 #include <sys/time.h>
 #include <vector>
 
 #ifdef __WIN32__
-#include <winsock2>
+#include <winsock2.h>
 #else
 #include <arpa/inet.h>
 #include <netdb.h>
