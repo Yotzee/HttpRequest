@@ -203,6 +203,8 @@ class HttpRequest
       public:
 	int commit()
 	{
+		if (_method == 0) return HTTP_ERROR;
+
 		serv_addr.sin_family = AF_INET;
 		serv_addr.sin_port = htons(_port);
 		struct hostent *host;
@@ -247,7 +249,7 @@ class HttpRequest
 				}
 			}
 		}
-		
+
 		close(sock);
 		return HTTP_SUCCESS;
 	}
