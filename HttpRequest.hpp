@@ -23,12 +23,12 @@ SOFTWARE.
 #ifndef _HTTP_REQUEST_H_
 #define _HTTP_REQUEST_H_
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstring>
 #include <iostream>
 #include <map>
 #include <sstream>
-#include <cstring>
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/time.h>
 #include <vector>
 
@@ -241,6 +241,7 @@ class HttpRequest
 		_responseMap[HTTP_RESPONSE_STATUS] = _response.substr(9, 3);
 		const char *ff = _response.c_str();
 		for (int i = 0; i <= _response.length(); i++) {
+			if (i + 4 > _response.length()) break;
 			if ((ff[i] == '\r' && ff[i + 1] == '\n') && (ff[i + 2] == '\r' && ff[i + 3] == '\n')) {
 				_responseMap[HTTP_RESPONSE_BODY] = _response.substr(i + 4, _response.length() - i);
 			}
