@@ -26,6 +26,7 @@ SOFTWARE.
 #include <cstdio>
 #include <iostream>
 #include <string>
+#include <sys/time.h>
 
 int main(int argc, char *argv[])
 {
@@ -35,15 +36,15 @@ int main(int argc, char *argv[])
 		std::cout << "Arg 2: port" << std::endl;
 		return 1;
 	}
+
 	HttpRequest request;
 	request.setHost(argv[1]);
 	request.setPath(argv[2]);
 	request.setPort(atoi(argv[3]));
 	request.setHeader("Content-Type", "application/json");
-	request.setMethod(HTTP_REQUEST_POST);
-	request.setHeader("Testing", "shit");
-	request.setBody("{test:\"hello world\"}");
+	request.setMethod(HTTP_REQUEST_GET);
 	request.commit();
-	std::cout << request.getBody();
+	std::cout << request.getBody() << std::endl;
+
 	return 0;
 }
