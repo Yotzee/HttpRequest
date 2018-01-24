@@ -237,15 +237,17 @@ class HttpRequest
 		};
 
 		_response = ss.str();
-
-		_responseMap[HTTP_RESPONSE_STATUS] = _response.substr(9, 3);
-		const char *ff = _response.c_str();
-		for (int i = 0; i <= _response.length(); i++) {
-			if (i + 4 > _response.length()) break;
-			if ((ff[i] == '\r' && ff[i + 1] == '\n') && (ff[i + 2] == '\r' && ff[i + 3] == '\n')) {
-				_responseMap[HTTP_RESPONSE_BODY] = _response.substr(i + 4, _response.length() - i);
+		if (_response.length() > 0) {
+			_responseMap[HTTP_RESPONSE_STATUS] = _response.substr(9, 3);
+			const char *ff = _response.c_str();
+			for (int i = 0; i <= _response.length(); i++) {
+				if (i + 4 > _response.length()) break;
+				if ((ff[i] == '\r' && ff[i + 1] == '\n') && (ff[i + 2] == '\r' && ff[i + 3] == '\n')) {
+					_responseMap[HTTP_RESPONSE_BODY] = _response.substr(i + 4, _response.length() - i);
+				}
 			}
 		}
+		
 		close(sock);
 		return HTTP_SUCCESS;
 	}
