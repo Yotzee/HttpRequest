@@ -22,7 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "HttpRequest.hpp"
+#include "http/request.hpp"
+#include "http/server.hpp"
 #include <cstdio>
 #include <iostream>
 #include <string>
@@ -37,7 +38,8 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	HttpRequest request;
+
+	Http::Request request;
 	request.setHost(argv[1]);
 	request.setPath(argv[2]);
 	request.setPort(atoi(argv[3]));

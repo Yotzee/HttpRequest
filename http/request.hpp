@@ -44,6 +44,9 @@ SOFTWARE.
 #include <unistd.h>
 #endif
 
+namespace Http
+{
+
 #define HTTP_REQUEST_GET 0
 #define HTTP_REQUEST_POST 1
 #define HTTP_REQUEST_DELETE 2
@@ -76,8 +79,7 @@ SOFTWARE.
 
 #define HTTP_RESPONSE_STATUS "STATUS"
 #define HTTP_RESPONSE_BODY "BODY"
-
-class HttpRequest
+class Request
 {
       private:
 	int _port;
@@ -92,12 +94,12 @@ class HttpRequest
 	std::map<std::string, std::string> _headers;
 
       public:
-	HttpRequest()
+	Request()
 	{
 		sock = 0;
 		valread = 0;
 		_port = 80;
-		_method = HTTP_REQUEST_GET;
+		setMethod(HTTP_REQUEST_GET);
 		memset(buffer, '\0', sizeof(buffer));
 		memset(&serv_addr, 0, sizeof(sockaddr_in));
 		_headers[HTTP_HEADER_UA] = HTTP_USER_AGENT;
@@ -178,7 +180,7 @@ class HttpRequest
 	}
 
       private:
-	std::string buildHeader()
+	inline std::string buildHeader()
 	{
 		std::string header;
 		header.append(_headers[HTTP_HEADER_METHOD] + HTTP_HEADER_SPACE);
@@ -255,5 +257,5 @@ class HttpRequest
 		return HTTP_SUCCESS;
 	}
 };
-
+}
 #endif
