@@ -68,7 +68,7 @@ namespace http
 #define HTTP_HEADER_CHAR_SET "Accept-Charset"
 #define HTTP_HEADER_CONNECTION "Connection"
 #define HTTP_HEADER_BODY "BODY"
-#define HTTP_HEADER_CONTENT_LENGTH "Conten-Length"
+#define HTTP_HEADER_CONTENT_LENGTH "Content-Length"
 
 #define HTTP_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
 
@@ -91,6 +91,43 @@ class request
 	void operator()()
 	{
 		commit();
+	}
+
+	std::string operator()(const char *host, const char *method, const char *path, int port)
+	{
+		this->setHost(host);
+		this->setMethod(method);
+		this->setPath(path);
+		this->setPort(port);
+
+		this->commit();
+		return this->getBody();
+	}
+
+	std::string operator()(const char *host, const char *method, const char *path, int port, const char *body)
+	{
+		this->setHost(host);
+		this->setMethod(method);
+		this->setPath(path);
+		this->setPort(port);
+		this->setBody(body);
+
+		this->commit();
+		return this->getBody();
+	}
+
+	std::string operator()(const char *host, const char *method, const char *path, int port, const char *body, int headerCount, const char *headers[])
+	{
+		this->setHost(host);
+		this->setMethod(method);
+		this->setPath(path);
+		this->setPort(port);
+		this->setBody(body);
+		for (int i = 0; i < headerCount; i = i + 2) {
+			this->setHeader(headers[i], headers[i + 1]);
+		}
+		this->commit();
+		return this->getBody();
 	}
 
 	request()
@@ -203,6 +240,10 @@ class request
 			header.append(it->first + ": " + _headers[it->first] + HTTP_HEADER_EL);
 		}
 		header.append(HTTP_HEADER_EL);
+
+		if (_headers[HTTP_HEADER_BODY].length() > 0) {
+			header.append(_headers[HTTP_HEADER_BODY]);
+		}
 		return header;
 	}
 
@@ -230,6 +271,7 @@ class request
 		}
 
 		std::string headers = buildHeader();
+		std::cout << headers << std::endl;
 		/// Send Headers
 		write(sock, headers.c_str(), headers.length());
 
