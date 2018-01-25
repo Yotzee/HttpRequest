@@ -29,6 +29,10 @@ SOFTWARE.
 #include <string>
 #include <sys/time.h>
 
+void get(std::map<std::string, std::string> request, std::map<std::string, std::string> response)
+{
+	std::cout << "get" << std::endl;
+}
 int main(int argc, char *argv[])
 {
 	if (argc < 3) {
@@ -38,24 +42,16 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	// http::server server;
-	// server.setPort(3000);
-	// server.listen();
+	http::server server;
+	server.setPort(3000);
+	server.addEndPoint("/get", get);
+	server();
 
-	// http::request request;
-	// request.setHost(argv[1]);
-	// request.setPath(argv[2]);
-	// request.setPort(atoi(argv[3]));
-	// request.setHeader("Content-Type", "application/json");
-	// request.setMethod(HTTP_METHOD_GET);
-	// request();
-	// std::cout << request.getBody() << std::endl;
-
-	//http::request r1;
-	//	std::cout << r1(argv[1], HTTP_METHOD_GET, argv[2], atoi(argv[3])) << std::endl;
+	// http::request r1;
+	// std::cout << r1(argv[1], HTTP_METHOD_GET, argv[2], atoi(argv[3])) << std::endl;
 	http::request r2;
 	const char *headers[4] = {"Content-Type", "application/json"};
-	//std::cout << r2(argv[1], HTTP_METHOD_POST, argv[2], atoi(argv[3]), "{test: \"hello world\"}", 2, headers) << std::endl;
-	std::cout << r2(argv[1], HTTP_METHOD_POST, argv[2], atoi(argv[3]), "{\"test\": \"hello world\"}", 2, headers) << std::endl;
+	r2(argv[1], HTTP_METHOD_POST, argv[2], atoi(argv[3]), "{\"hello\": \"world\"}", 2, headers);
+
 	return 0;
 }

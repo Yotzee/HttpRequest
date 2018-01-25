@@ -271,7 +271,6 @@ class request
 		}
 
 		std::string headers = buildHeader();
-		std::cout << headers << std::endl;
 		/// Send Headers
 		write(sock, headers.c_str(), headers.length());
 
@@ -292,7 +291,7 @@ class request
 				}
 			}
 		}
-
+		std::cout << _response;
 		close(sock);
 		return HTTP_SUCCESS;
 	}
