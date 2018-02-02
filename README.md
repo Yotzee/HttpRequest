@@ -22,6 +22,11 @@
 
 ### Example
 - GET
+```
+	http::request r1;
+	std::cout << r1(argv[1], HTTP_METHOD_GET, argv[2], atoi(argv[3])) << std::endl;
+```
+- GET
 ``` C++
 	HttpRequest request;
 	request.setHost(argv[1]);

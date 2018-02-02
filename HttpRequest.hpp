@@ -44,7 +44,7 @@ SOFTWARE.
 #include <unistd.h>
 #endif
 
-namespace http
+class HttpRequest
 {
 
 #define HTTP_METHOD_GET "GET"
@@ -69,13 +69,9 @@ namespace http
 #define HTTP_HEADER_CONNECTION "Connection"
 #define HTTP_HEADER_BODY "BODY"
 #define HTTP_HEADER_CONTENT_LENGTH "Content-Length"
-
 #define HTTP_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
-
 #define HTTP_RESPONSE_STATUS "STATUS"
 #define HTTP_RESPONSE_BODY "BODY"
-class request
-{
       private:
 	int _port;
 	struct sockaddr_in address;
@@ -130,7 +126,7 @@ class request
 		return this->getBody();
 	}
 
-	request()
+	HttpRequest()
 	{
 		sock = 0;
 		valread = 0;
@@ -175,7 +171,26 @@ class request
 
 	void setHost(const char *hostName)
 	{
+		char *str = new char[9];
+		memcpy(str, "\0", 9);
+		memcpy(str, hostName, 8);
+		if (strcmp(str, "https://") == 0) {
+			_headers[HTTP_HEADER_HOST] = std::string(hostName + 8);
+			delete[] str;
+			return;
+		}
+
+		memcpy(str, "\0", 9);
+		memcpy(str, hostName, 7);
+		if (strcmp(str, "http://") == 0) {
+			_headers[HTTP_HEADER_HOST] = std::string(hostName + 7);
+			delete[] str;
+			return;
+		}
+
 		_headers[HTTP_HEADER_HOST] = std::string(hostName);
+		delete[] str;
+		return;
 	}
 
 	void setPath(std::string path)
@@ -270,16 +285,19 @@ class request
 			return HTTP_HOST_UNKNOWN;
 		}
 
+		/// Build Headers
 		std::string headers = buildHeader();
+
 		/// Send Headers
 		write(sock, headers.c_str(), headers.length());
 
-		// Read Response
+		/// Read Response
 		std::stringstream ss;
 		while (read(sock, &buffer, sizeof(buffer)) > 0) {
 			ss << buffer;
 		};
 
+		/// Parse Response
 		_response = ss.str();
 		if (_response.length() > 0) {
 			_responseMap[HTTP_RESPONSE_STATUS] = _response.substr(9, 3);
@@ -291,10 +309,9 @@ class request
 				}
 			}
 		}
-		std::cout << _response;
+
 		close(sock);
 		return HTTP_SUCCESS;
 	}
 };
-}
 #endif
