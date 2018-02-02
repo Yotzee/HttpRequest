@@ -58,6 +58,11 @@
 	std::cout << request.getBody();
 ```
 
+## Test
+```
+	make && ./main http://www.google.com / 80
+```
+
 ## Build
 ```	
 	make 
