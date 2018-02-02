@@ -32,8 +32,9 @@ int main(int argc, char *argv[])
 {
 	if (argc < 3) {
 		std::cout << "<<<<<<<< ERROR >>>>>>>>>" << std::endl;
-		std::cout << "Arg 1: host + url" << std::endl;
-		std::cout << "Arg 2: port" << std::endl;
+		std::cout << "Arg 1: host" << std::endl;
+		std::cout << "Arg 2: url" << std::endl;
+		std::cout << "Arg 3: port" << std::endl;
 		return 1;
 	}
 
