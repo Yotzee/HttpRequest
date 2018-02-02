@@ -37,6 +37,13 @@
 	request.commit();
 	std::cout << request.getBody() << std::endl;
 ```
+
+- POST
+```
+	HttpRequest r2;
+	const char *headers[4] = {"Content-Type", "application/json"};
+	std::cout << r2(argv[1], HTTP_METHOD_POST, argv[2], atoi(argv[3]), "{\"hello\": \"world\"}", 2, headers) << std::endl;
+```
 - POST
 ``` C++
 	HttpRequest request;

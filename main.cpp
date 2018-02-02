@@ -39,9 +39,10 @@ int main(int argc, char *argv[])
 
 	HttpRequest r1;
 	std::cout << r1(argv[1], HTTP_METHOD_GET, argv[2], atoi(argv[3])) << std::endl;
-	//http::request r2;
-	// const char *headers[4] = {"Content-Type", "application/json"};
-	// r2(argv[1], HTTP_METHOD_POST, argv[2], atoi(argv[3]), "{\"hello\": \"world\"}", 2, headers);
+
+	HttpRequest r2;
+	const char *headers[4] = {"Content-Type", "application/json"};
+	std::cout << r2(argv[1], HTTP_METHOD_POST, argv[2], atoi(argv[3]), "{\"hello\": \"world\"}", 2, headers) << std::endl;
 
 	return 0;
 }
