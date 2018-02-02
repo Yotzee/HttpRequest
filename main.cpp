@@ -22,17 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "http/request.hpp"
-#include "http/server.hpp"
+#include "HttpRequest.hpp"
 #include <cstdio>
 #include <iostream>
 #include <string>
 #include <sys/time.h>
 
-void get(std::map<std::string, std::string> request, std::map<std::string, std::string> response)
-{
-	std::cout << "get" << std::endl;
-}
 int main(int argc, char *argv[])
 {
 	if (argc < 3) {
@@ -42,16 +37,11 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	http::server server;
-	server.setPort(3000);
-	server.addEndPoint("/get", get);
-	server();
-
-	// http::request r1;
-	// std::cout << r1(argv[1], HTTP_METHOD_GET, argv[2], atoi(argv[3])) << std::endl;
+	http::request r1;
+	std::cout << r1(argv[1], HTTP_METHOD_GET, argv[2], atoi(argv[3])) << std::endl;
 	http::request r2;
-	const char *headers[4] = {"Content-Type", "application/json"};
-	r2(argv[1], HTTP_METHOD_POST, argv[2], atoi(argv[3]), "{\"hello\": \"world\"}", 2, headers);
+	// const char *headers[4] = {"Content-Type", "application/json"};
+	// r2(argv[1], HTTP_METHOD_POST, argv[2], atoi(argv[3]), "{\"hello\": \"world\"}", 2, headers);
 
 	return 0;
 }
